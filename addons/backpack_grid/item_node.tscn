@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bs1qoc2vif756"]
+
+[ext_resource type="Texture2D" uid="uid://d13mt4fm025ia" path="res://icon.svg" id="1_vyipt"]
+
+[node name="item_node" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("1_vyipt")
+expand_mode = 1
+
+[node name="number" type="Label" parent="."]
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 64.0
+offset_bottom = 27.0
+text = "number"
+
+[node name="name" type="Label" parent="."]
+offset_right = 44.0
+offset_bottom = 26.0
+text = "name"
+horizontal_alignment = 1

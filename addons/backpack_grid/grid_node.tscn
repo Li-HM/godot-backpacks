@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0vpsaeg1fp6j"]
+
+[ext_resource type="Texture2D" uid="uid://b6nqq2yuar8y8" path="res://addons/backpack_grid/images/grid_node.png" id="1_y1wp7"]
+[ext_resource type="Script" path="res://addons/backpack_grid/grid_node.gd" id="2_hgtc0"]
+
+[node name="grid_node" type="TextureRect"]
+mouse_filter = 0
+texture = ExtResource("1_y1wp7")
+expand_mode = 1
+script = ExtResource("2_hgtc0")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
