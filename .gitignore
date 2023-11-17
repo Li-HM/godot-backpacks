@@ -4,7 +4,10 @@
 *.lk
 *.zip
 .godot
+*.godot
 resources
 scenes
 scripts
 project.godot
+icon.svg
+icon.svg.import
