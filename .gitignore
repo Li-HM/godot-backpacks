@@ -3,3 +3,8 @@
 *.int
 *.lk
 *.zip
+.godot
+resources
+scenes
+scripts
+project.godot
