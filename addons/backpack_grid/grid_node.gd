@@ -37,7 +37,6 @@ func _on_gui_input(event):
 #		判断,如果有正在拖动的物品，且格子上有物品  叠加替换
 		elif backpack_grid.is_drag and self.get_child_count() != 0:
 			if event.button_index == MOUSE_BUTTON_LEFT and event.is_released():
-#				print("Stack_replacing_items")
 				backpack_grid.Stack_replacing_items(backpack_grid.item_array[sort_id],self)
 #		判断,如果有正在拖动的物品，且格子上没有物品  放下拖动
 		elif backpack_grid.is_drag and self.get_child_count() == 0:
