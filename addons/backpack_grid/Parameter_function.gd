@@ -19,6 +19,9 @@ var backpack_parent_node:Node = null  #指定一个父节点，背包会生成�
 var backpack_status:bool = false  #用来判断背包是不是打开状态
 var is_drag:bool = false  #判断有无拖动道具。当背包与其它容器交换物品时，通过该值来作为判断依据
 var drag_item:Dictionary
+var is_operate:BoxContainer = null   #用来记录道具功能菜单栏
+var item_index:int = -1  #菜单操作的物品索引
+var item_grid:TextureRect  #记录被操作的道具底座
 
 #打开背包
 func open_backpack(parent_node:Node):
@@ -81,11 +84,9 @@ func close_backpack():
 #	关闭背包时，判断是不是有物品正被拖动
 	if is_drag:
 		get_items(drag_item)
+	if backpack_status :
+			backpack_parent_node.get_child(0).queue_free()
 	backpack_status = false
-	if backpack_parent_node == null:
-		get_node("/root/backpack_grid/backpack_background").queue_free()
-	else :
-		backpack_parent_node.get_child(0).queue_free()
 
 
 #获得物品。先判断背包中是否存在同类物品，如果存在且能叠加则进行叠加操作
@@ -96,13 +97,9 @@ func get_items(item:Dictionary):
 		if i != null and i["name"] == item["name"] and i["type"] == item["type"] :
 			if item.has("number"):
 				item_array[index]["number"] = str(int(i["number"]) + int(item["number"]))
-#				叠加后更新数据显示,根据玩家有无传入父节点，产生两个分支
-				if backpack_parent_node == null:
-					if has_node("/root/backpack_grid/backpack_background/ScrollContainer/GridContainer"):
-						get_node("/root/backpack_grid/backpack_background/ScrollContainer/GridContainer").get_child(index).get_child(0).get_child(1).text = str(item_array[index]["number"])
-				else :
-					if has_node(backpack_parent_node.get_path()):
-						backpack_parent_node.get_child(0).get_child(0).get_child(0).get_child(index).get_child(0).get_child(1).text = str(item_array[index]["number"])
+				#还要判断背包的可见性
+				if has_node(backpack_parent_node.get_path()) and backpack_status :
+					backpack_parent_node.get_child(0).get_child(0).get_child(0).get_child(index).get_child(0).get_child(1).text = str(item_array[index]["number"])
 				return
 			else :
 				Add_items_to_array(item)
@@ -116,27 +113,7 @@ func Add_items_to_array(item:Dictionary):
 	var empty:int = item_array.find(null)
 	if empty != -1:
 		item_array[empty] = item
-#		如果背包已打开，在背包显示刚添加的物品，,根据玩家有无传入父节点，产生两个分支
-		if backpack_parent_node == null:
-			if has_node("/root/backpack_grid/backpack_background"):
-				var items = preload("res://addons/backpack_grid/item_node.tscn").instantiate()
-#				遍历格子,用格子的ID来找到新增物品对应的格子
-				for i in get_node("/root/backpack_grid/backpack_background/ScrollContainer/GridContainer").get_child_count():
-					if get_node("/root/backpack_grid/backpack_background/ScrollContainer/GridContainer").get_child(i).sort_id == empty:
-						get_node("/root/backpack_grid/backpack_background/ScrollContainer/GridContainer").get_child(i).add_child(items)
-						items.get_node("TextureRect").size = item_grid_xp - Vector2(2,2)
-#						设置物品图标和显示名称
-						if ResourceLoader.exists(item_icon_route + str(item_array[empty]["icon"]) + str(".png")):
-							items.get_node("TextureRect").texture = load(item_icon_route + str(item_array[empty]["icon"]) + str(".png"))
-						items.get_node("name").text = str(item_array[empty]["name"])
-#						如果图标上的数量或名称有位移或偏差，调整这里
-						items.get_node("name").size = Vector2(item_grid_xp.x,26)
-						items.get_node("name").position = Vector2(0,item_grid_xp.y-26)
-						if item_array[empty].has("number"):
-							items.get_node("number").text = str(item_array[empty]["number"])
-						else :
-							items.get_node("number").text = ""
-		else :
+		if backpack_status :
 			var parent_node = backpack_parent_node.get_child(0).get_child(0).get_child(0)
 			var items = preload("res://addons/backpack_grid/item_node.tscn").instantiate()
 			for i in parent_node.get_child_count():
@@ -176,34 +153,19 @@ func Stack_replacing_items(this_item:Dictionary,sort:TextureRect):
 		sort.get_node("item_node/number").text = str(item_array[sort.sort_id]["number"])
 	else :
 		is_drag = false
-#		判断是否传入父节点，产生判断分支
-		if backpack_parent_node == null :
-#			把原来格子里的东西取出到临时的位置
-			sort.get_child(0).reparent(get_node("/root/backpack_grid/backpack_background"))
-			item_array[sort.sort_id] = drag_item
-#			把拖动的东西放进点击的格子里
-			if has_node("/root/backpack_grid/item_node"):
-				get_node("/root/backpack_grid/item_node").reparent(sort)
-				sort.get_child(0).position = Vector2.ZERO
-				sort.get_child(0).z_index = 0
-			drag_item = this_item
-#			把临时格子里的东西重新拖动起来
-			get_node("/root/backpack_grid/backpack_background/item_node").reparent(get_node("/root/backpack_grid"))
-			get_node("/root/backpack_grid/item_node").z_index = zz_index + 2
-		else :
-			if !has_node("/root/backpack_grid/grag"):
-				var grag = Node2D.new()
-				grag.name = "grag"
-				get_node("/root/backpack_grid").add_child(grag)
-			sort.get_child(0).reparent(get_node("/root/backpack_grid/grag"))
-			item_array[sort.sort_id] = drag_item
-			if has_node("/root/backpack_grid/item_node"):
-				get_node("/root/backpack_grid/item_node").reparent(sort)
-				sort.get_child(0).position = Vector2.ZERO
-				sort.get_child(0).z_index = 0
-			drag_item = this_item
-			get_node("/root/backpack_grid/grag/item_node").reparent(get_node("/root/backpack_grid"))
-			get_node("/root/backpack_grid/item_node").z_index = zz_index + 2
+		if !has_node("/root/backpack_grid/grag"):
+			var grag = Node2D.new()
+			grag.name = "grag"
+			get_node("/root/backpack_grid").add_child(grag)
+		sort.get_child(0).reparent(get_node("/root/backpack_grid/grag"))
+		item_array[sort.sort_id] = drag_item
+		if has_node("/root/backpack_grid/item_node"):
+			get_node("/root/backpack_grid/item_node").reparent(sort)
+			sort.get_child(0).position = Vector2.ZERO
+			sort.get_child(0).z_index = 0
+		drag_item = this_item
+		get_node("/root/backpack_grid/grag/item_node").reparent(get_node("/root/backpack_grid"))
+		get_node("/root/backpack_grid/item_node").z_index = zz_index + 2
 		is_drag = true
 
 
@@ -217,8 +179,8 @@ func drop_items(sort:TextureRect):
 		sort.get_child(0).z_index = 0
 
 
+#	拖动物品时的跟随鼠标移动
 func _process(delta):
-#	拖动物品跟随鼠标移动
 	if is_drag and has_node("/root/backpack_grid/item_node"):
 		get_node("/root/backpack_grid/item_node").global_position = get_viewport().get_mouse_position() - item_grid_xp/2
 
