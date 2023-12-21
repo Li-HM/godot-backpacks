@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7uo07r2uldkv"]
+
+[ext_resource type="Script" path="res://addons/backpack_grid/item_operate.gd" id="1_2nloi"]
+
+[node name="ItemOperate" type="BoxContainer"]
+offset_right = 60.0
+offset_bottom = 31.0
+vertical = true
+script = ExtResource("1_2nloi")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+text = "丢弃"
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
