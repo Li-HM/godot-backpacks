@@ -34,6 +34,9 @@ For more parameters, please modify them in Parameter_function.gd
 更多的参数，请在 Parameter_function.gd 中修改
 
 
+v1.3 —— 功能菜单
+1、为了更适合godot的引擎开发，现在生成背包必需要指定一个父节点
+2、添加了背包功能菜单的工作流，默认只有物品丢弃功能。需要根据自己的游戏内容来实现更多功能
 
 
 
