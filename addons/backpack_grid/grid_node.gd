@@ -59,11 +59,15 @@ func show_items_info():
 		attribute.global_position = self.global_position + backpack_grid.item_grid_xp/1.3
 		attribute.z_index = backpack_grid.zz_index+1
 		for i in backpack_grid.item_array[sort_id]:
-			#如果有更多不需要显示的项，在这里添加判断  or
+			#如果有更多不需要显示的项，在这里添加判断  and
 			if i != "icon" :
-				var type = attribute.get_node("BoxContainer/name").duplicate()
-				type.text = str(backpack_grid.item_array[sort_id][i])
-				attribute.get_node("BoxContainer").add_child(type)
+				#把默认的栏目设置为name
+				if i == "name" :
+					attribute.get_node("BoxContainer/name").text = backpack_grid.item_array[sort_id][i]
+				else :
+					var type = attribute.get_node("BoxContainer/name").duplicate()
+					type.text = i +" : "+str(backpack_grid.item_array[sort_id][i])
+					attribute.get_node("BoxContainer").add_child(type)
 		attribute.size.y = (26 + attribute.get_node("BoxContainer").get_child_count() * 26)
 
 

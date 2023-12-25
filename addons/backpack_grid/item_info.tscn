@@ -33,5 +33,7 @@ text = "背包道具"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="name" type="Label" parent="BoxContainer"]
+[node name="name" type="RichTextLabel" parent="BoxContainer"]
+custom_minimum_size = Vector2(150, 20)
 layout_mode = 2
+scroll_active = false

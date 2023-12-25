@@ -1,7 +1,6 @@
 extends Node
 
 #===========****以下定义背包参数****==========
-var backpack_position_xp:Vector2 = Vector2(700,100) #全局位置
 var zz_index:int = 100    #渲染层级，为保证背包可见性，应尽量使该值加大
 var grid_number:int = 100     #总格子的数量。注意，这个数值需要比你背包数组的长度大
 var r_grid_number:int = 5    #每行格子的数量
@@ -10,7 +9,7 @@ var scroll_bar:bool = true     #滚动条
 var show_name:bool = false    #背包栏里是否显示物品的名字
 var item_grid_xp:Vector2 = Vector2(64,64)   #每个格子的大小像素
 #替换成你的背包数组,数组元素为字典 必要键 "name","type","number","icon"
-var item_array:Array = [{"name":"leaf","type":"crops","number":"1","icon":"00001"},{"name":"fruit","type":"crops","number":"2","icon":"00002"}]   #替换成你的背包数组,数组元素为字典。必要字段"name","type"
+var item_array:Array = [{"name":"叶子","type":"crops","number":"1","icon":"00001"},{"name":"果子","type":"crops","number":"2","icon":"00002"}]   #替换成你的背包数组,数组元素为字典。必要字段"name","type"
 var item_icon_route:String =  "res://addons/backpack_grid/images/"  #背包物品图标,添加添加多个目录时，需要在加载背包创建图标时进行路径判断
 var Background_image:String  = "res://addons/backpack_grid/images/background.png" #尽量使用绝对路径
 var backpack_parent_node:Node = null  #指定一个父节点，背包会生成在父节点中。这意味着第一行的全局位置会失效
@@ -36,15 +35,11 @@ func open_backpack(parent_node:Node):
 	var backpack = preload("res://addons/backpack_grid/backpack_node.tscn").instantiate()
 	backpack.name = "backpack_background"
 	backpack_status = true
-	if parent_node == null:
-		get_node("/root/backpack_grid").add_child(backpack)
-		backpack.global_position = backpack_position_xp
-	else :
-		item_grid_xp.x = int(parent_node.size.x - r_grid_number * 4) / r_grid_number
-		item_grid_xp.y = parent_node.size.y / w_grid_number
-		backpack_parent_node = parent_node
-		backpack.size = parent_node.size
-		parent_node.add_child(backpack)
+	item_grid_xp.x = int(parent_node.size.x - r_grid_number * 4) / r_grid_number
+	item_grid_xp.y = parent_node.size.y / w_grid_number
+	backpack_parent_node = parent_node
+	backpack.size = parent_node.size
+	parent_node.add_child(backpack)
 #	设置背包背景图
 	backpack.texture = load(Background_image)
 #	设置背包控件的滚动条
