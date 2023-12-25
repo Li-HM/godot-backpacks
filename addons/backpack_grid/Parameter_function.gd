@@ -1,21 +1,23 @@
 extends Node
 
-#===========以下定义背包参数==========
+#===========****以下定义背包参数****==========
 var backpack_position_xp:Vector2 = Vector2(700,100) #全局位置
 var zz_index:int = 100    #渲染层级，为保证背包可见性，应尽量使该值加大
 var grid_number:int = 100     #总格子的数量。注意，这个数值需要比你背包数组的长度大
 var r_grid_number:int = 5    #每行格子的数量
 var w_grid_number:int = 5    #每列格子的数量
 var scroll_bar:bool = true     #滚动条
+var show_name:bool = false    #背包栏里是否显示物品的名字
 var item_grid_xp:Vector2 = Vector2(64,64)   #每个格子的大小像素
 #替换成你的背包数组,数组元素为字典 必要键 "name","type","number","icon"
 var item_array:Array = [{"name":"leaf","type":"crops","number":"1","icon":"00001"},{"name":"fruit","type":"crops","number":"2","icon":"00002"}]   #替换成你的背包数组,数组元素为字典。必要字段"name","type"
 var item_icon_route:String =  "res://addons/backpack_grid/images/"  #背包物品图标,添加添加多个目录时，需要在加载背包创建图标时进行路径判断
 var Background_image:String  = "res://addons/backpack_grid/images/background.png" #尽量使用绝对路径
 var backpack_parent_node:Node = null  #指定一个父节点，背包会生成在父节点中。这意味着第一行的全局位置会失效
+#===========****定义背包参数-结束****==========
 
 
-#============背包功能变量============
+#============背包功能变量-只用来调用，不要修改============
 var backpack_status:bool = false  #用来判断背包是不是打开状态
 var is_drag:bool = false  #判断有无拖动道具。当背包与其它容器交换物品时，通过该值来作为判断依据
 var drag_item:Dictionary
@@ -69,6 +71,8 @@ func open_backpack(parent_node:Node):
 			if ResourceLoader.exists(item_icon_route + str(item_array[i]["icon"]) + str(".png")):
 				items.get_node("TextureRect").texture = load(item_icon_route + str(item_array[i]["icon"]) + str(".png"))
 			items.get_node("name").text = str(item_array[i]["name"])
+			if show_name == false:
+				items.get_node("name").text = ""
 #			如果图标上的数量或名称有位移或偏差，调整这里
 			items.get_node("name").size = Vector2(item_grid_xp.x,26)
 			items.get_node("name").position = Vector2(0,item_grid_xp.y-26)
@@ -124,7 +128,9 @@ func Add_items_to_array(item:Dictionary):
 					if ResourceLoader.exists(item_icon_route + str(item_array[empty]["icon"]) + str(".png")):
 						items.get_node("TextureRect").texture = load(item_icon_route + str(item_array[empty]["icon"]) + str(".png"))
 					items.get_node("name").text = str(item_array[empty]["name"])
-#						如果图标上的数量或名称有位移或偏差，调整这里
+					if show_name == false:
+						items.get_node("name").text = ""
+#					如果图标上的数量或名称有位移或偏差，调整这里
 					items.get_node("name").size = Vector2(item_grid_xp.x,26)
 					items.get_node("name").position = Vector2(0,item_grid_xp.y-26)
 					if item_array[empty].has("number"):
