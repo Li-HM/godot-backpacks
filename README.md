@@ -33,7 +33,7 @@ For more parameters, please modify them in Parameter_function.gd
 
 更多的参数，请在 Parameter_function.gd 中修改
 
-v1.3.1 —— 新增背包物品名字显示开关，默认关闭名字显示
+v1.3.1 —— 新增背包物品名字显示开关，默认关闭名字显示66
 
 
 v1.3 —— 功能菜单

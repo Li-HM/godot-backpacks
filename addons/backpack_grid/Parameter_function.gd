@@ -13,7 +13,7 @@ var item_array:Array = [{"name":"叶子","type":"crops","number":"1","icon":"000
 var item_icon_route:String =  "res://addons/backpack_grid/images/"  #背包物品图标,添加添加多个目录时，需要在加载背包创建图标时进行路径判断
 var Background_image:String  = "res://addons/backpack_grid/images/background.png" #尽量使用绝对路径
 var backpack_parent_node:Node = null  #指定一个父节点，背包会生成在父节点中。这意味着第一行的全局位置会失效
-#===========****定义背包参数-结束****==========
+#===========****定义背包参数-结束****=========
 
 
 #============背包功能变量-只用来调用，不要修改============
